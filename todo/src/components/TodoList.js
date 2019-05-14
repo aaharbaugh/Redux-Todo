@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import { addTodo } from '../actions/actions';
+import { addTodo, toggleTodo } from '../actions/actions';
 
 class TodoList extends React.Component {
     state = {
+        id: '',
         newTodo: ''
     };
 
@@ -14,8 +15,17 @@ class TodoList extends React.Component {
 
     addTodo = e => {
         e.preventDefault();
-        this.props.addTodo(this.state.newTodo);
-        this.setState({ newTodo: ''})
+        let newTodo = {
+            ...this.state
+        }
+        this.props.addTodo(newTodo);
+        this.setState(prevState => {
+            return { id: prevState.id + 1, newTodo: ''}
+        })
+    }
+
+    toggleTodo = id => {
+        this.props.toggleTodo(id);
     }
 
     render(){
@@ -24,14 +34,14 @@ class TodoList extends React.Component {
                 <div className="todo-list">
                     {this.props.todos &&
                     this.props.todos.map(todo => (
-                        <h2> {todo.value}, completed: {todo.completed ? 'yes' : 'no'}</h2>
+                        <h2 onClick={() => this.toggleTodo(todo.id)} key={todo.id}> {todo.value}, completed: {todo.completed ? 'yes' : 'no'}</h2>
                     ))}
                 </div>
                 <input 
                     type="text"
                     value={this.state.newTodo}
                     onChange={this.handleChanges}
-                    placeHolder="Add a new Todo"
+                    placeholder="Add a new Todo"
                 />
                 <button onClick={this.addTodo}>Add a Todo</button>
             </React.Fragment>
@@ -47,5 +57,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { addTodo }
+    { addTodo, toggleTodo }
 )(TodoList);

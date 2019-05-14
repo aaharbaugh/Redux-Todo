@@ -5,3 +5,11 @@ export const addTodo = newTodo => {
         payload: newTodo
     };
 }
+
+export const TOGGLE_TODO = 'TOGGLE_TODO';
+export const toggleTodo = todoId => {
+    return {
+        type: TOGGLE_TODO,
+        payload: todoId
+    }
+};
